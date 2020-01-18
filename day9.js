@@ -68,10 +68,11 @@ function computer(arr){
 		}
 		else if(parseInt(new_op) == 3){
 			if(parseInt(par1) == 2){
-				arr[relative_code + arr[i+1]] = 1
+				//provide 1 for part 1 and 2 for part 2
+				arr[relative_code + arr[i+1]] = 2
 			}
 			else 
-				arr[arr[i+1]] = 1
+				arr[arr[i+1]] = 2
 			i+=2;
 		}
 		else if(parseInt(new_op) == 4){

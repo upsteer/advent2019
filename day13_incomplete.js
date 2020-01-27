@@ -33,6 +33,8 @@ while(true){
 	var paddle = final_obj.filter(function(item){
 	    return item.item_id == 3
 	})
+	draw(final_obj)
+	debugger
 	output = []
 	console.log(ball, paddle)
 	var joyStick = 0
@@ -60,20 +62,35 @@ while(true){
 // }
 
 
-// function draw(datum){
-// 	const plotlib = require('nodeplotlib');
-// 	var painted_data = datum.filter(function(item){ return item.item_id })
-// 	var x = painted_data.map(function(item){return item.x})
-// 	var y = painted_data.map(function(item){ return item.y})
+function draw(datum){
+	var to_plot = []
+	for(var i = 0; i<= 22; i++){
+	    console.log(i)
+	    to_plot.push((datum.filter(function(item){
+	        return item.y == i
+	    })))
+	}
+	to_plot.forEach(function(item){
+    var buffer = ''
+    item.forEach(function(iter){
+        if(iter.item_id == 3){
+            buffer += '_'
+        }
+        else if(iter.item_id == 4){
+            buffer += 'o'
+        }
+        else if(iter.item_id == 2){
+            buffer += '#'
+        }
+        else
+            buffer += ' '
+    })
+    	buffer+= '\n'
+    	console.log(buffer)
+	})
+	debugger
+}
 
-// 	const data = [{
-//   		x: x,
-//   		y: y,
-//   		type: 'scatter',
-//   		mode: 'markers'
-// 	}];
-// 	plotlib.plot(data);
-// }
 // final = final.filter(function(item){
 //     return item.length;
 // })
@@ -143,6 +160,15 @@ function computer(arr, input){
 			i+=4;
 		}
 		else if(parseInt(new_op) == 3){
+			const readline = require('readline').createInterface({
+			  input: process.stdin,
+			  output: process.stdout
+			})
+
+			readline.question(`What's your name?`, (name) => {
+			  console.log(`Hi ${name}!`)
+			  readline.close()
+			})
 			if(parseInt(par1) == 2){
 				arr[relative_code + arr[i+1]] = input
 			}

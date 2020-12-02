@@ -140,26 +140,6 @@ var direction = 1;
 var running = true;
 var steps = 0;
 
-// var recursiveAsyncReadLine = function () {
-//   rl.question('Command: ', function (answer) {
-//     if (answer == 'exit') //we need some base case, for recursion
-//       return rl.close(); //closing RL and returning from function.
-//     console.log('Got it! Your answer was: "', parseInt(answer), '"');
-//     var output = computer(parseInt(answer));
-//     console.log('Comp output:', output)
-//     if(output == 1){
-//         grid.move(parseInt(answer), 'D');
-//     } else if(output == 0){
-//         grid.change(parseInt(answer), '#');
-//     } else if(output == 2){
-//         console.log('Voila!!')
-//     }
-//     grid.printing();
-//     recursiveAsyncReadLine();
-//   });
-// };
-// recursiveAsyncReadLine();
-
 function oppDirs(dir){
     if(dir<3){
         return [3, 4]
@@ -175,7 +155,8 @@ function changeDirection(dir){
 function checkAlternate(direct){
     var blocked = [];
     var available = [];
-    var arr = [1,2,3,4]
+    var arr = [1,2,3,4];
+    var found = false;
     arr.splice(changeDirection(direct)-1, 1);
     arr.forEach(function(item){
         output = computer(item);
@@ -187,39 +168,64 @@ function checkAlternate(direct){
             available.push(item);
             computer(changeDirection(item));
         }else if(output == 2){
+            grid.change(item, '$');
             console.log('Found!!');
+            found = true;
         }
     })
+    if(found){
+        return false;
+    }
     return available;
 }
 
+var multi = [];
+var moves = [];
 while(running){
     output = computer(direction);
-    console.log(direction, output);
     if(output == 2){
         running = false
     } else if(output == 1){
+        moves.push(direction);
         grid.move(direction, 'D');
-        grid.printing();
+        // grid.printing();
         steps+=1;
         available = checkAlternate(direction);
-        console.log(available);
         if(available.length == 1){
             direction = available[0]
         } else if(available.length == 0){
-            // Its a dead end
+            console.log('stuck')
+            var can_go = multi.pop();
+            var back_dir = 0;
+            var backtrack = steps - can_go.at
+            for(var i = 0; i<backtrack; i++){
+                back_dir = changeDirection(moves.pop());
+                computer(back_dir);
+                grid.move(back_dir, 'D');
+                // grid.printing();
+            }
+            direction = can_go['move'][0];
+            steps-=backtrack;
+            // running = false;
             // Revert back to when there are two or more options available
         } else {
+            if(typeof available == 'boolean'){
+                steps+=1;
+                running = false;
+            } else {
+                direction = available.splice(0,1)[0];
+                multi.push({move: available, at: steps});
+            }
             // If multiple available options, save the positions to be used in case of a dead end
         }
     } else if(output == 0){
         grid.change(direction, '#');
-        grid.printing();
+        // grid.printing();
         direction+=1;
         if(direction>=5){
             direction = 1;
         }
     }
 }
-
+grid.printing()
 console.log(steps)

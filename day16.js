@@ -42,4 +42,4 @@ for(var phase=0;phase<100;phase++){
 	})
 	input=finale.split('');
 }
-console.log('part1: 'finale);
+console.log('part1: ', finale.substr(0, 8));

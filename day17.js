@@ -151,13 +151,12 @@ var grid = `#######...#####
 ....#...#......
 ....#...#......
 ....#####......`
-console.log(grid);
 scaffold = grid.split('\n').map(function(item){
     return item.split('')
 })
 var grid = new Grid(50);
 grid.set_different(scaffold, 0, 6);
-console.log(grid.get_possible_move());
+grid.move_until_out()
 // grid.printing();
 // scaffold.forEach(function(item, line){
 // 	if(line == 0){

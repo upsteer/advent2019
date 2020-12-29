@@ -66,16 +66,20 @@ function computer(input){
             i += 4;
         } else if(parseInt(new_op) == 3){
         	console.log('waiting for input')
+            var tem_input = input.splice(0, 1)[0];
+            // input.splice(0, 1)[0];
+            console.log('giving input', tem_input)
             // Input to computer which movement command
             if(parseInt(par1) == 2){
-                arr[relative_code + arr[i+1]] = input
+                arr[relative_code + arr[i+1]] = tem_input;
             } else {
-                arr[arr[i+1]] = input
+                arr[arr[i+1]] = tem_input;
             }
             i+=2;
         }
         else if(parseInt(new_op) == 4){
             // Output of computer which is status of Droid
+            // console.log(par_value1);
             output.push(par_value1);
             i+=2;
         } else if (parseInt(new_op) == 5) {
@@ -128,53 +132,77 @@ function computer(input){
     	return output;
     } 
 }
-// var output1 = [];
-var output1 = computer();
+var output = computer();
 var scaffold = [];
 var grid = "";
 var sum = 0;
-output1.forEach(function(item){
+var start_x = 0;
+var start_y = 0
+output.forEach(function(item){
 	grid+=String.fromCharCode(item)
 })
-var grid = `#######...#####
-#.....#...#...#
-#.....#...#...#
-......#...#...#
-......#...###.#
-......#.....#.#
-^########...#.#
-......#.#...#.#
-......#########
-........#...#..
-....#########..
-....#...#......
-....#...#......
-....#...#......
-....#####......`
+// var grid = `#######...#####
+// #.....#...#...#
+// #.....#...#...#
+// ......#...#...#
+// ......#...###.#
+// ......#.....#.#
+// ^########...#.#
+// ......#.#...#.#
+// ......#########
+// ........#...#..
+// ....#########..
+// ....#...#......
+// ....#...#......
+// ....#...#......
+// ....#####......`
+
 scaffold = grid.split('\n').map(function(item){
     return item.split('')
 })
-var grid = new Grid(50);
-grid.set_different(scaffold, 0, 6);
-grid.move_until_out()
-// grid.printing();
-// scaffold.forEach(function(item, line){
-// 	if(line == 0){
-// 		return;
-// 	}
-// 	item.split('').forEach(function(iter, character){
-// 		if(character == 0){
-// 			return;
-// 		}
-// 		if(iter == '#'){
-// 			if(scaffold[line-1][character] == '#' && scaffold[line+1][character] == '#' && item[character-1] == '#' && item[character+1] == '#'){
-// 				sum += line*character
-// 			}
-// 		}
-// 	})
-// })
-// console.log('part1', sum)
-// console.log('A'.charCodeAt())
+
+scaffold.forEach(function(item, line){
+	if(line == 0){
+		return;
+	}
+	item.forEach(function(iter, character){
+		if(character == 0){
+			return;
+		}
+        if(scaffold[line][character] == '^'){
+            start_x = character;
+            start_y = line;
+        }
+		if(iter == '#'){
+			if(scaffold[line-1][character] == '#' && scaffold[line+1][character] == '#' && item[character-1] == '#' && item[character+1] == '#'){
+				sum += line*character
+			}
+		}
+	})
+})
+console.log('part1', sum)
+var grid = new Grid(2);
+grid.set_different(scaffold, start_x, start_y);
+grid.printing();
+var path = grid.move_until_out();
 arr = JSON.parse(arr_clone)
 arr[0] = 2
-console.log(computer('A'.charCodeAt()))
+// var main_routine = ['A','B','A','C','A','B','A','C','B','C']
+// var main_r = []
+// main_routine.forEach(function(item){
+//     main_r.push(item.charCodeAt());
+//     main_r.push(','.charCodeAt());
+// })
+// main_r.pop()
+// main_r.push('\n'.charCodeAt());
+var subroutine = [65, 44, 66, 44, 65, 44, 67, 44, 65, 44, 66, 44, 65, 44, 67, 44, 66, 44, 67, 10, 82, 44, 52, 76, 44, 49, 50, 76, 44, 56, 82, 44, 52, 10, 76, 44, 56, 82, 44, 49, 48, 82, 44, 49, 48, 82, 44, 54, 10, 82, 44, 52, 82, 44, 49, 48, 76, 44, 49, 50, 10, 110, 10];
+// var subroutine = [['R4',  'L12', 'L8',  'R4',  'L8', 'R10', 'R10', 'R6',  'R4',  'L12', 'L8',  'R4',  'R4',  'R10', 'L12'], ['R4',  'L12', 'L8',  'R4',  'L8', 'R10', 'R10', 'R6',  'R4',  'L12', 'L8',  'R4',  'R4',  'R10', 'L12'], ['L8',  'R10', 'R10', 'R6',  'R4', 'R10', 'L12']]
+// var arr = [];
+// path.forEach(function(item){
+//     arr.push(item[0].charCodeAt())
+//     arr.push(','.charCodeAt())
+//     item.substr(1, item.length).split('').forEach(function(iter) {arr.push(iter.charCodeAt());});
+// })
+// arr.push('\n'.charCodeAt())
+computing = true;
+console.log(computer(subroutine))

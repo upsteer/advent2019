@@ -70,7 +70,7 @@ class Grid{
 				move = move[0];
 				change = '0';
 				if(move != prev_move){
-					path.push(one_dir);
+					path.push(path.pop()+one_dir);
 					path.push(this.dir_map[prev_move+','+move])
 					one_dir = 0;
 				}
@@ -84,16 +84,15 @@ class Grid{
 			} else {
 				this.oppDirs(prev_move).forEach(function(dir){
 					if(this.dir_map[dir+','+prev_move] == path[path.length-1]){
-						path.push(one_dir);
+						path.push(path.pop()+one_dir);
 					}
 				}, this)
 				finding = false;
-				console.log(path.join());
 				return path;
 			}
 			this.move_scaffold(move, '^', change);
 		}
-		this.printing();
+		return path;
 	}
 	oppDirs(dir){
 	    if(dir<3){

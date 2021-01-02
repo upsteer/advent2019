@@ -39,6 +39,19 @@ class Grid{
 		this.currentY += x_move;
 		this.xy[this.currentY][this.currentX] = shape;
 	}
+	get_possible_move_for_vault(){
+		var possible_moves = [];
+		var key = new RegExp(/[a-z]/);
+		this.mapper.forEach(function(directions, index){
+			var new_x = this.currentX+directions[0];
+			var new_y = this.currentY+directions[1];
+			var new_place = this.xy[new_x][new_y];
+			if(new_place == "." || new_place.match(key)){
+				possible_moves.push(index+1);
+			}
+		}, this)
+		return possible_moves;
+	}
 	get_possible_move(){
 		// Up/Down is X and Left/Right is Y
 		// First know where we can travel

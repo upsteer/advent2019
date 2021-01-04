@@ -32,15 +32,16 @@ console.log('doors are', doors)
 grid.printing()
 
 console.log(grid.get_possible_move_for_vault())
-
-while(!keys.length){
-	var can_go = false;
-	keys.forEach(function(single_key){
-		can_go = grid.can_go_to(single_key);
-		if(!can_go){
-
-		} else {
-
-		}
-	})
-}
+console.log(grid.can_go_to('a'))
+console.log(grid.can_go_to('b'))
+grid.printing()
+// console.log(grid.can_go_to('a'))
+// while(!keys.length){
+// 	var can_go = false;
+// 	keys.forEach(function(single_key){
+// 		can_go = grid.can_go_to(single_key);
+// 		if(can_go){
+// 			//Go to the place
+// 		}
+// 	})
+// }

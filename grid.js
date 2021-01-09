@@ -6,8 +6,7 @@ class Grid{
 		this.currentX = this.currentY = Math.floor(size/2 - 1);
 		this.xy[this.currentX][this.currentY] = 'X'
 		this.mapper = [[-1, 0], [1, 0], [0, -1], [0, 1]];
-		this.dir_map = {'1,3': 'L', '1,4': 'R', '2,3': 'R', '2,4': 'L', '3,1': 'R', '3,2': 'L', '4,1': 'L', '4,2': 'R'}
-		this.have_keys = [];
+		this.dir_map = {'1,3': 'L', '1,4': 'R', '2,3': 'R', '2,4': 'L', '3,1': 'R', '3,2': 'L', '4,1': 'L', '4,2': 'R'};
 	}
 	set_different(scaffold, x, y){
 		this.xy = scaffold;
@@ -42,7 +41,12 @@ class Grid{
 		this.currentY += x_move;
 		this.xy[this.currentY][this.currentX] = shape;
 	}
-	get_possible_move_for_vault(currentDir){
+	do_opposite_of_these_moves(moves){
+		for(var i=moves.length-1;i>=0;i--){
+			this.move(this.changeDirection(moves[i]), '@')
+		}
+	}
+	get_possible_move_for_vault(currentDir, destination){
 		var possible_moves = [];
 		var key = new RegExp(/[a-z]/);
 		this.mapper.forEach(function(directions, index){
@@ -52,26 +56,26 @@ class Grid{
 			var new_x = this.currentX+directions[0];
 			var new_y = this.currentY+directions[1];
 			var new_place = this.xy[new_x][new_y];
-			if(new_place == "." || new_place.match(key) || this.have_keys.indexOf(new_place.toLowerCase()) > -1){
+			if(new_place == "." || new_place == destination){
 				possible_moves.push(index+1);
 			}
 		}, this)
 		return possible_moves;
 	}
-	can_go_to(destination){
+	go_to(destination){
 		var steps = 0;
 		var multi = [];
 		var moves = [];
 		var going = true;
 		var reached = '';
 		while(going){
-			var option = this.get_possible_move_for_vault(moves[moves.length-1]);
+			var option = this.get_possible_move_for_vault(moves[moves.length-1], destination);
 			if(!option.length){
 				if(!multi.length){
 					break;
 				} else {
 					var backtrack = multi.pop();
-					var back_dir = backtrack['multi_dir'].pop()
+					var back_dir = backtrack['multi_dir'].pop();
 					for(var i=0;i<(moves.length-backtrack['at']);i++){
 						this.move(this.changeDirection(moves.pop()), '@');
 					}
@@ -79,19 +83,22 @@ class Grid{
 					moves.push(back_dir);
 				}
 			} else if(option.length == 1){
-				moves.push(option[0])
+				moves.push(option[0]);
 				reached = this.move(option[0], '@');
 			} else {
 				var current_dir = option.splice(0,1)[0];
-				reached = this.move(current_dir, '@')
-				multi.push({'at': moves.length, 'multi_dir': option})
-				moves.push(current_dir)
+				reached = this.move(current_dir, '@');
+				multi.push({'at': moves.length, 'multi_dir': option});
+				moves.push(current_dir);
 			}
 			if (reached == destination){
 				going = false;
 			}
 		}
-		this.have_keys.push(destination);
+		if(going){
+			this.do_opposite_of_these_moves(moves);
+			return false;
+		}
 		return moves.length;
 	}
 	get_possible_move(){
@@ -148,6 +155,24 @@ class Grid{
 			this.move_scaffold(move, '^', change);
 		}
 		return path;
+	}
+	open_door(key){
+		this.xy.forEach(function(item, index, theArr){
+			if(item.indexOf(key.toUpperCase())>-1){
+				theArr[index][item.indexOf(key.toUpperCase())] = '.'
+			}
+		}, this)
+	}
+	get_availabe_keys(){
+		var starting = {x: this.currentX, y: this.currentY}
+		var available_moves = [];
+		this.keys.forEach(function(key){
+			var can_go = this.go_to(key);
+			if(can_go!=false){
+				available_moves.push({'can_go': key, 'moves': can_go});
+			}
+		}, this)
+		return available_moves;
 	}
 	oppDirs(dir){
 	    if(dir<3){

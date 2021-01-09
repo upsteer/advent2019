@@ -1,9 +1,9 @@
 var input = `#########\n#b.A.@.a#\n#########`
-// input = `########################
-// #f.D.E.e.C.b.A.@.a.B.c.#
-// ######################.#
-// #d.....................#
-// ########################`
+input = `########################
+#f.D.E.e.C.b.A.@.a.B.c.#
+######################.#
+#d.....................#
+########################`
 
 var Grid = require('./grid');
 
@@ -29,19 +29,15 @@ grid.xy = input.split('\n').map(function(item, index){
 })
 console.log('keys are', keys)
 console.log('doors are', doors)
+grid.keys = keys
+// console.log(grid.go_to('b'))
 grid.printing()
+var avail_keys = grid.get_availabe_keys();
+grid.open_door(avail_keys[0].can_go);
+grid.printing()
+avail_keys = grid.get_availabe_keys()
+grid.open_door(avail_keys[0].can_go);
+grid.printing()
+avail_keys = grid.get_availabe_keys()
 
-console.log(grid.get_possible_move_for_vault())
-console.log(grid.can_go_to('a'))
-console.log(grid.can_go_to('b'))
-grid.printing()
-// console.log(grid.can_go_to('a'))
-// while(!keys.length){
-// 	var can_go = false;
-// 	keys.forEach(function(single_key){
-// 		can_go = grid.can_go_to(single_key);
-// 		if(can_go){
-// 			//Go to the place
-// 		}
-// 	})
-// }
+console.log(avail_keys)

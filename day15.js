@@ -181,6 +181,7 @@ while(running){
     if(output == 2){
         running = false
     } else if(output == 1){
+        // debugger
         moves.push(direction);
         grid.move(direction, 'D');
         steps+=1;

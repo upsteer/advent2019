@@ -1,10 +1,14 @@
-var input = `#########\n#b.A.@.a#\n#########`
+// var input = `#########\n#b.A.@.a#\n#########`
 input = `########################
 #f.D.E.e.C.b.A.@.a.B.c.#
 ######################.#
 #d.....................#
 ########################`
-
+input = `#################
+#j.A..b...f..D.o#
+########@########
+#k.E..a...g..B.n#
+#################`
 var Grid = require('./grid');
 
 var grid = new Grid(30);
@@ -15,8 +19,9 @@ var doors = [];
 grid.xy = input.split('\n').map(function(item, index){
     item.split('').forEach(function(iter, i){
         if(iter == '@'){
-            grid.currentY = i;
-            grid.currentX = index;
+            grid.currentY = index;
+            grid.currentX = i;
+            grid.reset_positions = [index, i];
         }
         if(iter.match(key)){
         	keys.push(iter);
@@ -25,19 +30,18 @@ grid.xy = input.split('\n').map(function(item, index){
         	doors.push(iter);
         }
     })
-    return item.split('')
+    return item.split('');
 })
+debugger
 console.log('keys are', keys)
 console.log('doors are', doors)
 grid.keys = keys
-// console.log(grid.go_to('b'))
-grid.printing()
-var avail_keys = grid.get_availabe_keys();
-grid.open_door(avail_keys[0].can_go);
-grid.printing()
-avail_keys = grid.get_availabe_keys()
-grid.open_door(avail_keys[0].can_go);
-grid.printing()
-avail_keys = grid.get_availabe_keys()
-
-console.log(avail_keys)
+// console.log(grid.go_to('g'))
+// grid.printing()
+keys.forEach(function(item){
+	// if(grid.go_to(item)){
+		console.log(item, grid.go_to(item));
+		grid.reset()
+		grid.printing()
+	// }
+})

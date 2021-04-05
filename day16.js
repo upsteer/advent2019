@@ -54,6 +54,7 @@ input = input.toString().split('').map(function(aa){
 var finale2 = [];
 var initial_sum = 0;
 for(var phase=0;phase<100;phase++){
+	console.log('This takes about 8 hours')
 	current = input.slice(offset, input.length)
 	initial_sum = current.reduce((a,b) => a+b)
 	finale2.push(initial_sum%10)

@@ -5,8 +5,13 @@ class Grid{
 		})
 		this.currentX = this.currentY = Math.floor(size/2 - 1);
 		this.xy[this.currentX][this.currentY] = 'X'
-		this.mapper = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+		this.mapper = [[0, -1], [0, 1], [-1, 0], [1, 0]];
 		this.dir_map = {'1,3': 'L', '1,4': 'R', '2,3': 'R', '2,4': 'L', '3,1': 'R', '3,2': 'L', '4,1': 'L', '4,2': 'R'};
+		this.reset_positions = [this.currentY, this.currentX]
+	}
+	reset(){
+		this.currentY = this.reset_positions[0];
+		this.currentX = this.reset_positions[1];
 	}
 	set_different(scaffold, x, y){
 		this.xy = scaffold;
@@ -21,16 +26,16 @@ class Grid{
 	change(direction, shape){
 		var x_move = this.mapper[direction-1][0];
 		var y_move = this.mapper[direction-1][1];
-		this.xy[this.currentX+x_move][this.currentY+y_move] = shape;
+		this.xy[this.currentY+y_move][this.currentX+x_move] = shape;
 	}
 	move(direction, shape){
 		var x_move = this.mapper[direction-1][0];
 		var y_move = this.mapper[direction-1][1];
-		this.xy[this.currentX][this.currentY] = '.';
+		this.xy[this.currentY][this.currentX] = '.';
 		this.currentX += x_move;
 		this.currentY += y_move;
-		var what_was_here = this.xy[this.currentX][this.currentY];
-		this.xy[this.currentX][this.currentY] = shape;
+		var what_was_here = this.xy[this.currentY][this.currentX];
+		this.xy[this.currentY][this.currentX] = shape;
 		return what_was_here;
 	}
 	move_scaffold(direction, shape, change){
@@ -55,9 +60,12 @@ class Grid{
 			}
 			var new_x = this.currentX+directions[0];
 			var new_y = this.currentY+directions[1];
-			var new_place = this.xy[new_x][new_y];
+			var new_place = this.xy[new_y][new_x];
 			if(new_place == "." || new_place == destination){
 				possible_moves.push(index+1);
+				if(new_place.match(key)){
+					// console.log(new_place)
+				}
 			}
 		}, this)
 		return possible_moves;
@@ -76,7 +84,7 @@ class Grid{
 				} else {
 					var backtrack = multi.pop();
 					var back_dir = backtrack['multi_dir'].pop();
-					for(var i=0;i<(moves.length-backtrack['at']);i++){
+					for(var i=0;i<=(moves.length-backtrack['at']);i++){
 						this.move(this.changeDirection(moves.pop()), '@');
 					}
 					reached = this.move(back_dir, '@')

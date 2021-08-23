@@ -8,6 +8,8 @@ class Grid{
 		this.mapper = [[0, -1], [0, 1], [-1, 0], [1, 0]];
 		this.dir_map = {'1,3': 'L', '1,4': 'R', '2,3': 'R', '2,4': 'L', '3,1': 'R', '3,2': 'L', '4,1': 'L', '4,2': 'R'};
 		this.reset_positions = [this.currentY, this.currentX]
+		this.key = new RegExp(/[a-z]/);
+		this.currentkey = [0,0]
 	}
 	reset(){
 		this.currentY = this.reset_positions[0];
@@ -53,7 +55,6 @@ class Grid{
 	}
 	get_possible_move_for_vault(currentDir, destination){
 		var possible_moves = [];
-		var key = new RegExp(/[a-z]/);
 		this.mapper.forEach(function(directions, index){
 			if(currentDir && this.changeDirection(currentDir)-1 == index){
 				return;
@@ -63,14 +64,11 @@ class Grid{
 			var new_place = this.xy[new_y][new_x];
 			if(new_place == "." || new_place == destination){
 				possible_moves.push(index+1);
-				if(new_place.match(key)){
-					// console.log(new_place)
-				}
 			}
 		}, this)
 		return possible_moves;
 	}
-	go_to(destination){
+	go_to(destination, unlock, key){
 		var steps = 0;
 		var multi = [];
 		var moves = [];
@@ -103,8 +101,13 @@ class Grid{
 				going = false;
 			}
 		}
+		if(unlock){
+			this.open_door(key);
+		}
 		if(going){
 			this.do_opposite_of_these_moves(moves);
+			// going is true, when destination is reached.
+			// going is false when destination is not reached.
 			return false;
 		}
 		return moves.length;
